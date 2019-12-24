@@ -12,7 +12,9 @@ RUN apk update \
     && rm -rf /tmp/* /var/cache/apk/*
 ARG FRP_VERSION=0.25.1
 WORKDIR /tmp/frp
-RUN set -x && wget https://github.com/fatedier/frp/releases/download/v${FRP_VERSION}/frp_${FRP_VERSION}_linux_amd64.tar.gz \
+RUN set -x \
+    && apt install -y wget \
+    && wget https://github.com/fatedier/frp/releases/download/v${FRP_VERSION}/frp_${FRP_VERSION}_linux_amd64.tar.gz \
     && tar -zxvf frp_${FRP_VERSION}_linux_amd64.tar.gz \
     && cp frp_${FRP_VERSION}_linux_amd64/frps /usr/bin/frps \
     && mkdir -p /etc/frps \
