@@ -15,14 +15,14 @@ ENV FRP_ENV=frps
 ENV FRP_VERSION=0.30.0
 WORKDIR /tmp
 RUN set -x \
-    && apt install -y wget \
+    && apk install -y wget \
     && wget https://github.com/fatedier/frp/releases/download/v${FRP_VERSION}/frp_${FRP_VERSION}_linux_amd64.tar.gz \
     && tar -zxf frp_${FRP_VERSION}_linux_amd64.tar.gz \
     && mv frp_${FRP_VERSION}_linux_amd64 /var/frp \
     && mkdir -p /var/frp/conf \
-    && apt remove -y wget \
-    && apt autoremove -y \
-    && rm -rf /tmp/* /var/cache/apk/* /var/lib/apt/lists/*
+    && apk remove -y wget \
+    && apk autoremove -y \
+    && rm -rf /tmp/* /var/cache/apk/* /var/lib/apk/lists/*
 
 COPY conf/${FRP_ENV}.ini /var/frp/conf/${FRP_ENV}.ini
 VOLUME /var/frp/conf    # conf被配置成了卷，方便以后修改frps.ini
