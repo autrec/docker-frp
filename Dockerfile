@@ -2,7 +2,8 @@ FROM alpine
 #声明作者
 LABEL maintainer="frp docker Autre <mo@autre.cn>"
 #升级内核及软件
-RUN apk update \
+RUN set -x \
+    && apk update \
     && apk upgrade \
     ##设置时区
     && apk --update add --no-cache tzdata \
@@ -10,21 +11,21 @@ RUN apk update \
     && apk del tzdata \
     ## 清除安装软件及缓存
     && rm -rf /tmp/* /var/cache/apk/*
-ARG FRP_VERSION=0.25.1
-WORKDIR /tmp/frp
+ENV FRP_ENV=frps
+ENV FRP_VERSION=0.30.0
+WORKDIR /tmp
 RUN set -x \
     && apt install -y wget \
     && wget https://github.com/fatedier/frp/releases/download/v${FRP_VERSION}/frp_${FRP_VERSION}_linux_amd64.tar.gz \
-    && tar -zxvf frp_${FRP_VERSION}_linux_amd64.tar.gz \
-    && cp frp_${FRP_VERSION}_linux_amd64/frps /usr/bin/frps \
-    && mkdir -p /etc/frps \
-    && cp frp_${FRP_VERSION}_linux_amd64/frps.ini /etc/frps \
-    && cp frp_${FRP_VERSION}_linux_amd64/frps_full.ini /etc/frps \
-    && mkdir -p /etc/frpc \
-    && cp frp_${FRP_VERSION}_linux_amd64/frpc.ini /etc/frpc \
-    && cp frp_${FRP_VERSION}_linux_amd64/frpc_full.ini /etc/frpc \
-    && rm -rf /tmp/frp
+    && tar -zxf frp_${FRP_VERSION}_linux_amd64.tar.gz \
+    && mv frp_${FRP_VERSION}_linux_amd64 /var/frp \
+    && mkdir -p /var/frp/conf \
+    && apt remove -y wget \
+    && apt autoremove -y \
+    && rm -rf /tmp/* /var/cache/apk/* /var/lib/apt/lists/*
 
-#开放端口
-EXPOSE 80 443
-CMD ["nginx","-g","daemon off;"]
+COPY conf/${FRP_ENV}.ini /var/frp/conf/${FRP_ENV}.ini
+VOLUME /var/frp/conf    # conf被配置成了卷，方便以后修改frps.ini
+
+WORKDIR /var/frp
+CMD ./${FRP_ENV} -c ./conf/${FRP_ENV}.ini
