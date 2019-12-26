@@ -21,7 +21,7 @@ RUN set -x \
     && mkdir -p /var/frp/conf \
     && rm -rf /tmp/* /var/cache/apk/* /var/lib/apk/lists/*
 
-COPY conf/${FRP_ENV}.ini /var/frp/conf/${FRP_ENV}.ini
+#COPY conf/${FRP_ENV}.ini /var/frp/conf/${FRP_ENV}.ini
 VOLUME /var/frp/conf    # conf被配置成了卷，方便以后修改frps.ini
 
 WORKDIR /var/frp
