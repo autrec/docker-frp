@@ -15,7 +15,7 @@ ENV FRP_ENV=frps
 ENV FRP_VERSION=0.30.0
 WORKDIR /tmp
 RUN set -x \
-    && wget https://github.com/fatedier/frp/releases/download/v${FRP_VERSION}/frp_${FRP_VERSION}_linux_amd64.tar.gz \
+    && wget https://soft.zycao.com/download/frp/frp_${FRP_VERSION}_linux_amd64.tar.gz \
     && tar -zxf frp_${FRP_VERSION}_linux_amd64.tar.gz \
     && mv frp_${FRP_VERSION}_linux_amd64 /var/frp \
     && mkdir -p /var/frp/conf \
